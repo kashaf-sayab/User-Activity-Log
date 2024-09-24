@@ -1,10 +1,12 @@
 <?php
     function ual_display_activity_log() {
 
+        ual_backup_logs();
+
         global $wpdb;
         $table_name = $wpdb->prefix . 'user_activity_log';
         
-        $logs_per_page = 15;
+        $logs_per_page = 10;
 
         // Get the current page number from the query parameter, default to 1
         $paged = isset($_GET['paged']) ? absint($_GET['paged']) : 1;
@@ -15,6 +17,25 @@
 
         echo '<div class="wrap">';
         echo '<h1>User Activity Log</h1>';
+
+        // Backup & Restore Forms
+        echo '<div style="margin-bottom: 20px; display: flex; justify-content: space-between;">';
+        echo '<form method="post" style="display: inline-block;">';
+        echo '<input type="hidden" name="action" value="backup_logs" />';
+        wp_nonce_field('backup_restore_nonce');
+        echo '<button type="submit" style="padding: 10px 15px; background-color: #0073aa; color: #fff; border: none; border-radius: 3px;">Create Backup</button>';
+        echo '</form>';
+    
+        echo '<form method="post" enctype="multipart/form-data" style="display: inline-block;">';
+        echo '<input type="hidden" name="action" value="restore_backup" />';
+        wp_nonce_field('backup_restore_nonce');
+        echo '<label for="backup_file" style="margin-right: 10px;">Restore Backup:</label>';
+        echo '<input type="file" name="backup_file" id="backup_file" style="margin-right: 10px;" />';
+        echo '<button type="submit" style="padding: 10px 15px; background-color: #0073aa; color: #fff; border: none; border-radius: 3px;">Restore Backup</button>';
+        echo '</form>';
+        echo '</div>';
+
+
         //filter form
         echo '<form method="get" action=""style="margin-bottom: 20px;">';
             echo '<input type="hidden" name="page" value="' . esc_attr($_GET['page']) . '" />';//hidden input ensures that the results show up on the same page
@@ -101,7 +122,7 @@
             // Execute the query
             $logs = $wpdb->get_results($query);
 
-            // Get total count of logs (for pagination purposes)
+            // Get total count of logs for pagination 
             $total_logs_query = "SELECT COUNT(*) FROM $table_name WHERE 1=1";
         
                 // Apply the same filters for pagination 
@@ -132,6 +153,7 @@
                     echo '<thead>
                         <tr>
                         <th>Date</th>
+                         <th>ID</th>
                         <th>User</th>
                         <th>Activity Type</th>
                         <th>Description</th>
@@ -145,7 +167,7 @@
                                 $user_roles = implode(', ', array_map('ucfirst', $user_info->roles));
                                 $user_activity_url = add_query_arg(['user' => $log->user_id], $_SERVER['REQUEST_URI']);
                                 // Get user avatar
-                                $user_avatar = get_avatar($user_info->ID, 40); // 32 is the size of the avatar
+                                $user_avatar = get_avatar($user_info->ID, 40); 
         
                                 echo '<tr>';
                                     // Format the timestamp
@@ -159,6 +181,7 @@
     
                                     // Output the timestamp in three lines with the date as a link
                                     echo '<td>' . esc_html($time_ago) . '<br><a href="' . esc_url($date_activity_url) . '">' . esc_html($date_formatted) . '</a><br>' . esc_html($time_formatted) . '</td>';
+                                    echo '<td>' . esc_html($log->id) . '</td>';
                                     echo '<td>' . $user_avatar . ' <a href="' . esc_url($user_activity_url) . '">' . esc_html($user_info->display_name) . '</a><br>' . esc_html($user_roles) . '</td>';
                                     echo '<td><a href="' . esc_url(add_query_arg('activity_type', esc_attr($log->activity_type), $_SERVER['REQUEST_URI'])) . '">' . esc_html($log->activity_type) . '</a></td>';
                                     echo '<td>' . esc_html($log->activity_description) . '</td>';
@@ -171,17 +194,23 @@
         
 
                 echo '</tbody>';
-                // Repeat the header section before closing the table
+    
         echo '<tfoot>
             <tr>
                 <th>Date</th>
+                 <th>ID</th>
                 <th>User</th>
                 <th>Activity Type</th>
                 <th>Description</th>
             </tr>
         </tfoot>';
         echo '</table>';
-        echo '</div>';
+      // Add export buttons 
+      echo '<div style="margin-top: 20px;">';
+      echo '<a href="' . esc_url(add_query_arg('export', 'csv')) . '" class="button button-primary" style="margin-right: 10px;">Export CSV</a>';
+      echo '<a href="' . esc_url(add_query_arg('export', 'excel')) . '" class="button button-primary">Export Excel</a>';
+      echo '</div>';
+          echo '</div>';
         
        // Pagination links
        $total_pages = ceil($total_logs / $logs_per_page);//ceil round-up nearest whole number
