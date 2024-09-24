@@ -13,7 +13,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('UAL_PLUGIN_PATH', plugin_dir_path(__FILE__));
+define( 'ACTIVITY_LOG__FILE__', __FILE__ );
+define( 'ACTIVITY_LOG_BASE', plugin_basename( ACTIVITY_LOG__FILE__ ) );
 
 add_action('admin_menu', 'ual_add_admin_menu');
 
@@ -37,7 +38,8 @@ function ual_add_dashboard_widgets() {
 }
 add_action('wp_dashboard_setup', 'ual_add_dashboard_widgets');
 
-require_once(plugin_dir_path(__FILE__) . 'includes/user-activity-log-table.php');
-require_once(plugin_dir_path(__FILE__) . 'admin/log-function.php');
-require_once(plugin_dir_path(__FILE__) . 'includes/class-activity-log-managment.php');
-require_once(plugin_dir_path(__FILE__) . 'includes/dashboard-widgets.php');
+include('includes/user-activity-log-table.php');
+include('admin/log-function.php');
+include('includes/class-activity-log-managment.php');
+include('includes/dashboard-widgets.php');
+include('includes/activity-log-export.php');
