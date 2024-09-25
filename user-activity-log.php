@@ -37,9 +37,22 @@ function ual_add_dashboard_widgets() {
     );
 }
 add_action('wp_dashboard_setup', 'ual_add_dashboard_widgets');
+function logging_settings_page() {
+    add_submenu_page(
+        'user-activity-log', 
+        'Settings', 
+        'Settings', 
+        'manage_options',   
+        'logging-settings',
+        'logging_settings_page_html'
+    );
+}
+
+add_action('admin_menu', 'logging_settings_page');
 
 include('includes/user-activity-log-table.php');
 include('admin/log-function.php');
 include('includes/class-activity-log-managment.php');
 include('includes/dashboard-widgets.php');
 include('includes/activity-log-export.php');
+include('admin/setting-page.php');
