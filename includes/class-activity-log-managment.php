@@ -13,8 +13,6 @@
 
         // Calculate the offset
         $offset = ($paged - 1) * $logs_per_page;
-
-
         echo '<div class="wrap">';
         echo '<h1>User Activity Log</h1>';
 
@@ -23,7 +21,7 @@
         echo '<form method="post" style="display: inline-block;">';
         echo '<input type="hidden" name="action" value="backup_logs" />';
         wp_nonce_field('backup_restore_nonce');
-        echo '<button type="submit" style="padding: 10px 15px; background-color: #0073aa; color: #fff; border: none; border-radius: 3px;">Create Backup</button>';
+        echo '<button type="submit" style="padding: 7px 15px; background-color: #0073aa; color: #fff; border: none; border-radius: 3px;">Create Backup</button>';
         echo '</form>';
     
         echo '<form method="post" enctype="multipart/form-data" style="display: inline-block;">';
@@ -31,7 +29,7 @@
         wp_nonce_field('backup_restore_nonce');
         echo '<label for="backup_file" style="margin-right: 10px;">Restore Backup:</label>';
         echo '<input type="file" name="backup_file" id="backup_file" style="margin-right: 10px;" />';
-        echo '<button type="submit" style="padding: 10px 15px; background-color: #0073aa; color: #fff; border: none; border-radius: 3px;">Restore Backup</button>';
+        echo '<button type="submit" style="padding: 7px 15px; background-color: #0073aa; color: #fff; border: none; border-radius: 3px;">Restore Backup</button>';
         echo '</form>';
         echo '</div>';
 
@@ -54,7 +52,7 @@
             echo '<label for="action-filter">Action Type: </label>';
             echo '<select name="action_type" id="action-filter">';
                     echo '<option value="">All Actions</option>';
-                    $action_types = ['login', 'logout', 'page view', 'content change', 'comment', 'media upload'];
+                    $action_types = ['login', 'logout', 'page view','content change', 'comment', 'media upload'];
                         foreach ($action_types as $type) {
                                 $selected = (isset($_GET['action_type']) && $_GET['action_type'] == $type) ? 'selected' : '';
                                 echo '<option value="' . esc_attr($type) . '" ' . $selected . '>' . ucfirst($type) . '</option>';
