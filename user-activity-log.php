@@ -50,9 +50,29 @@ function logging_settings_page() {
 
 add_action('admin_menu', 'logging_settings_page');
 
+function add_log_page_to_menu() {
+    add_menu_page(
+        'User Logs',
+        'User Logs', 
+        'view_plugin_logs', 
+        'log_page', 
+        'render_log_page', 
+        'dashicons-admin-users', 
+        6
+    );
+}
+
+function render_log_page() {
+    include 'admin/log-page.php'; 
+}
+
+add_action('admin_menu', 'add_log_page_to_menu');
+
+
 include('includes/user-activity-log-table.php');
 include('admin/log-function.php');
-include('includes/class-activity-log-managment.php');
+include('includes/activity-log-managment.php');
 include('includes/dashboard-widgets.php');
 include('includes/activity-log-export.php');
 include('admin/setting-page.php');
+include('admin/notifcation.php');
