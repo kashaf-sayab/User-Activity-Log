@@ -56,7 +56,7 @@ function ual_log_content_changes($post_id, $post, $update) {
     $action = $update ? 'Updated' : 'Created';
     
     if ($user_id) {
-        ual_log_activity($user_id, 'Content Change', "$action post: " . $post->post_title);
+        ual_log_activity($user_id, 'Content Change', "$action post/page: " . $post->post_title);
     }
 }
 //for comment action
@@ -76,6 +76,14 @@ function ual_log_media_upload($post_id) {
         ual_log_activity($user_id, 'Media Upload', "Uploaded media: " . $attachment->post_title);
     }
 }
+
+function ual_log_failed_login($username) {
+    $user = get_user_by('login', $username);
+    $user_id = $user ? $user->ID : 0; // Get user ID if exists, otherwise set to 0
+
+    ual_log_activity($user_id, 'Failed Login', "Failed login attempt for username: " . esc_html($username));
+}
+
 //action hooks
 add_action('wp_login', 'ual_log_login', 10, 2);//10 priority,2 argument passed
 add_action('clear_auth_cookie', 'ual_log_logout', 10);
@@ -83,3 +91,4 @@ add_action('template_redirect', 'ual_log_page_view');
 add_action('save_post', 'ual_log_content_changes', 10, 3);
 add_action('wp_insert_comment', 'ual_log_comment', 10, 2);
 add_action('add_attachment', 'ual_log_media_upload');
+add_action('wp_login_failed', 'ual_log_failed_login');

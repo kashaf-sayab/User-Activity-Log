@@ -4,14 +4,14 @@ function logging_settings_page_html() {
         return;
     }
     if (isset($_POST['logging_settings_nonce']) && wp_verify_nonce($_POST['logging_settings_nonce'], 'save_logging_settings')) {
-        //Prepare the settings data to be saved
+        // Prepare the settings data to be saved
         $settings = array(
             'log_retention' => intval($_POST['log_retention']),
             'notification_preferences' => isset($_POST['notification_preferences']) ? $_POST['notification_preferences'] : array(),
             'access_control' => isset($_POST['access_control']) ? $_POST['access_control'] : array(),
             'user_access_control' => isset($_POST['user_access_control']) ? $_POST['user_access_control'] : array(), // Saving user selections
         );
-        //Update the settings in the WordPress options table
+        // Update the settings in the WordPress options table
         update_option('logging_settings', $settings);
         echo '<div class="notice notice-success is-dismissible"><p>Settings saved.</p></div>';
     }
@@ -27,11 +27,11 @@ function logging_settings_page_html() {
         $settings['user_access_control'] = array();
     }
 
-    $users = get_users(array('fields' => array('ID', 'display_name')));
+    $users = get_users(array('fields' => array('ID', 'display_name'))); 
     ?>
     
     <div class="wrap">
-        <h1>Logging Settings</h1>
+        <h1>Log Settings</h1>
         <form method="post" action="">
             <?php wp_nonce_field('save_logging_settings', 'logging_settings_nonce'); ?>
             <table class="form-table">
@@ -48,8 +48,8 @@ function logging_settings_page_html() {
                 <tr valign="top">
                     <th scope="row">Notification Preferences</th>
                     <td>
-                        <label><input type="checkbox" name="notification_preferences[]" value="content_change" <?php checked(in_array('content_change', $settings['notification_preferences'])); ?> /> Notify on Content Change</label><br>
-                        <label><input type="checkbox" name="notification_preferences[]" value="failed_login" <?php checked(in_array('failed_login', $settings['notification_preferences'])); ?> /> Notify on Failed Login Attempt</label><br>
+                        <label><input type="checkbox" name="notification_preferences[]" value="content change" <?php checked(in_array('content change', $settings['notification_preferences'])); ?> /> Notify on Content Change</label><br>
+                        <label><input type="checkbox" name="notification_preferences[]" value="failed login" <?php checked(in_array('failed login', $settings['notification_preferences'])); ?> /> Notify on Failed Login Attempt</label><br>
                     </td>
                 </tr>
 
@@ -95,6 +95,7 @@ function logging_settings_page_html() {
     </div>
     <?php
 }
+
 function delete_old_logs() {
     $settings = get_option('logging_settings', array('log_retention' => 30));
     $retention_period = intval($settings['log_retention']);
@@ -105,35 +106,38 @@ function delete_old_logs() {
     $query = $wpdb->prepare("DELETE FROM $table_name WHERE timestamp < %s", $date_threshold);
     $wpdb->query($query);
 }
+
 if (!wp_next_scheduled('daily_log_cleanup')) {
     wp_schedule_event(time(), 'daily', 'daily_log_cleanup');
 }
 
 add_action('daily_log_cleanup', 'delete_old_logs');
 function user_can_view_logs() {
-    $settings = get_option('logging_settings', array());
-    
+    // Fetch the logging settings
+    $settings = get_option('logging_settings', array(
+        'access_control' => array(),
+        'user_access_control' => array()
+    ));
+    // Get the allowed roles and users from the settings
     $allowed_roles = isset($settings['access_control']) && is_array($settings['access_control']) ? $settings['access_control'] : array();
     $allowed_users = isset($settings['user_access_control']) && is_array($settings['user_access_control']) ? $settings['user_access_control'] : array();
-
-    // Get current user
+    // Get the current user
     $current_user = wp_get_current_user();
     $user_roles = $current_user->roles;
     $user_id = $current_user->ID;
-    if (current_user_can('view_plugin_logs')) {
-        return true; 
-    }
+    // If no roles or users are set in the settings, deny access
     if (empty($allowed_roles) && empty($allowed_users)) {
-        return true;
+        return false;
     }
-    if (array_intersect($user_roles, $allowed_roles)) {
+    // Check if the user belongs to any of the allowed roles
+    if (!empty($allowed_roles) && array_intersect($user_roles, $allowed_roles)) {
         return true; 
     }
-
+    // Check if the user is explicitly allowed via user-specific access
     if (in_array($user_id, $allowed_users)) {
         return true; 
     }
-
+    // If none of the conditions are met, deny access
     return false; 
 }
 function save_logging_settings($input) {
@@ -153,3 +157,15 @@ function save_logging_settings($input) {
 }
 
 add_filter('pre_update_option_logging_settings', 'save_logging_settings');
+
+function add_view_plugin_logs_capability() {
+    $roles = ['Administrator', 'Editor', 'Author', 'Contributor', 'Subscriber']; // Adjust roles as necessary
+    foreach ($roles as $role) {
+        $role_object = get_role($role);
+        if ($role_object) {
+            $role_object->add_cap('view_plugin_logs');
+        }
+    }
+}
+add_action('admin_init', 'add_view_plugin_logs_capability');
+

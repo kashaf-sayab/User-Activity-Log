@@ -52,7 +52,7 @@
             echo '<label for="action-filter">Action Type: </label>';
             echo '<select name="action_type" id="action-filter">';
                     echo '<option value="">All Actions</option>';
-                    $action_types = ['login', 'logout', 'page view','content change', 'comment', 'media upload'];
+                    $action_types = ['login', 'logout', 'page view','failed login','content change', 'comment', 'media upload'];
                         foreach ($action_types as $type) {
                                 $selected = (isset($_GET['action_type']) && $_GET['action_type'] == $type) ? 'selected' : '';
                                 echo '<option value="' . esc_attr($type) . '" ' . $selected . '>' . ucfirst($type) . '</option>';
