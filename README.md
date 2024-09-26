@@ -29,37 +29,37 @@
          * Go to __User Activity Log page__. 
          * Use the filter options to search for specific user, actions, date ranges. 
          * The logs will be displayed in a table format.
-     # Using the Plugin: 
-    1. __Viewing Activity Logs:__ 
+ # Using the Plugin: 
+   1. __Viewing Activity Logs:__ 
          * Navigate to __User Activity Log page__. 
          * Use the search and filter options to find specific log entries. 
          * You can filter by user, action type and date range. 
-    2. __Export Logs:__
+   2. __Export Logs:__
          * On the User Activity Log page,(at the end of the page) use the Export CSV or Export Excel buttons to download the logs in the desired format.
-    3. __Setting Notifications:__
+   3. __Setting Notifications:__
          * Go to __Settings__. 
          * Configure the notification preferences to receive alerts for specific types of activities.   
-    # Troubleshooting: 
-       1. __Backup or Restore Fails:__
+ # Troubleshooting: 
+   1. __Backup or Restore Fails:__
          * Ensure that the plugin has the necessary file permissions to write and read files in the backups directory. 
          * Check for errors in the file upload process. Make sure the backup file format is correct and not corrupted.    
-       2. __Logs Not Showing:__ 
+   2. __Logs Not Showing:__ 
          * Ensure that the log table in the database is correctly created and populated. 
          * Verify that the filtering criteria are set correctly. 
-       3. __Access Control Issues:__ 
+   3. __Access Control Issues:__ 
          * Check that the selected roles in the settings match the roles assigned to users. 
          * Ensure that the logging_settings option is properly saved and retrieved. 
-     # FAQs: 
-       1.  __How do I restore logs from a backup file?__ <br>
+  # FAQs: 
+  1.  __How do I restore logs from a backup file?__ <br>
             * Navigate to User Activity Log page. Upload the backup file and click the Restore Backup button. Ensure the backup file is in the correct format(SQL format) and not corrupted. 
-       2.  __Can I export logs to formats other than CSV and Excel?__ <br>
+ 2.  __Can I export logs to formats other than CSV and Excel?__ <br>
             * Currently, the plugin supports exporting logs only in CSV and Excel formats. Future updates may include additional formats.
-       3.  __How can I enable or disable specific notifications?__ <br>
+ 3.  __How can I enable or disable specific notifications?__ <br>
             * Go to __Settings__ and adjust the notification preferences according to your needs 
-       4. __What should I do if I can't access the log page?__ <br>
+ 4. __What should I do if I can't access the log page?__ <br>
             * Verify that your user role is included in the access control settings. If you are an admin and still cannot access the logs, check the settings for any misconfigurations.
-    # Screenshot:
-     [user activity log page(part-1)](https://drive.google.com/file/d/12jI8VHw9VoT1xBxvGrcsKFM2PFtU-FOS/view?usp=drive_link)<br>
-     [user activity log page (part-2)](https://drive.google.com/file/d/1eCV-Q5QCosO1Jqnie52EdEDi3u5H6dkI/view?usp=drive_link)<br>
-     [Setting page](https://drive.google.com/file/d/1nQM1axU6Ro2y5exrO356Evs-g0dEv19N/view?usp=drive_link)<br>
-     [Dashboard Overview](https://drive.google.com/file/d/1voIXvvYQLZQlWLhOKsNQpApUpXUlpFgH/view?usp=drive_link)  
+# Screenshot:
+  [user activity log page(part-1)](https://drive.google.com/file/d/12jI8VHw9VoT1xBxvGrcsKFM2PFtU-FOS/view?usp=drive_link)<br>
+  [user activity log page (part-2)](https://drive.google.com/file/d/1eCV-Q5QCosO1Jqnie52EdEDi3u5H6dkI/view?usp=drive_link)<br>
+  [Setting page](https://drive.google.com/file/d/1nQM1axU6Ro2y5exrO356Evs-g0dEv19N/view?usp=drive_link)<br>
+  [Dashboard Overview](https://drive.google.com/file/d/1voIXvvYQLZQlWLhOKsNQpApUpXUlpFgH/view?usp=drive_link)  
